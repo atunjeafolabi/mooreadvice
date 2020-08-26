@@ -20,11 +20,21 @@ export default new VueRouter({
     routes: [
         {
             path: '/',
+            name: 'login',
+            component: Vue.component('Login', require('./pages/Login.vue').default),
+        },
+        {
+            path: 'register',
+            name: 'register',
+            component: Vue.component('Register', require('./pages/Register.vue').default),
+        },
+        {
+            path: '/tasks',
             name: 'layout',
             component: Vue.component('Layout', require('./layouts/Admin.vue').default),
             children: [
                 {
-                    path: '/',
+                    path: 'all',
                     name: 'all-tasks',
                     component: Vue.component('Layout', require('./pages/tasks/Index.vue').default),
                 },

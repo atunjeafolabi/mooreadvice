@@ -9,6 +9,9 @@
                 <li class="nav-item d-none d-sm-inline-block">
                     <router-link :to="{name: 'all-tasks'}" class="nav-link">Home</router-link>
                 </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a @click="logout()" class="nav-link">Logout</a>
+                </li>
             </ul>
         </nav>
         <!-- /.navbar -->
@@ -59,3 +62,22 @@
     </div>
     <!-- /.content-wrapper -->
 </template>
+<script>
+    export default {
+        methods: {
+            logout(){
+                localStorage.removeItem('token');
+                this.$router.push({name: 'login'});
+                // axios
+                //     .get('/api/logout')
+                //     .then(response => (
+                //         this.removeToken()
+                //     ));
+            },
+            // removeToken(){
+            //     localStorage.removeItem('token');
+            //     this.$router.push({name: 'login'});
+            // }
+        }
+    }
+</script>

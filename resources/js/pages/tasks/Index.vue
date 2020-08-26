@@ -95,7 +95,7 @@
         },
         mounted () {
             axios
-                .get('api/tasks')
+                .get('/api/tasks')
                 .then(response => (this.tasks = response.data));
         },
         methods: {
@@ -105,7 +105,7 @@
             deleteTask(id){
                 if(confirm("Are you sure you want to delete task?")){
                     axios
-                        .delete('api/tasks/' + id)
+                        .delete('/api/tasks/' + id)
                         .then(response => (this.tasks = response.data));
 
                     this.$router.go();
