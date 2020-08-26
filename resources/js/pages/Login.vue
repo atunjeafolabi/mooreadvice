@@ -80,8 +80,8 @@
             }
         },
         methods: {
-            login(){
-                axios
+            async login(){
+                await axios
                     .post('api/login', {email: this.user.email, password: this.user.password})
                     .then(response => (
                         this.storeToken(response.data.token)
