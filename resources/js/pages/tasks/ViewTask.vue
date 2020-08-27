@@ -63,7 +63,11 @@
             const taskId = this.$route.params.id;
 
             axios
-                .get('/api/tasks/' + taskId)
+                .get('/api/tasks/' + taskId, {
+                    headers: {
+                        Authorization: 'Bearer ' + localStorage.getItem('token')
+                    }
+                })
                 .then(response => (this.task = response.data));
         },
     }

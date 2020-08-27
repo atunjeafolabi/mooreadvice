@@ -76,7 +76,11 @@
             submitTask(){
                 if(this.formdata.title !== "" && this.formdata.description !==""){
                     axios
-                        .post('/api/tasks', {title: this.formdata.title, description: this.formdata.description})
+                        .post('/api/tasks', {title: this.formdata.title, description: this.formdata.description}, {
+                            headers: {
+                                Authorization: 'Bearer ' + localStorage.getItem('token')
+                            }
+                        })
                         .then(response => (this.tasks = response.data));
 
                     // redirect to list of all tasks

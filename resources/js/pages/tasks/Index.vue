@@ -39,7 +39,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr v-for="task in tasks">
+                                    <tr v-for="(task, index) in tasks" :key="index">
                                         <td>{{task.id}}</td>
                                         <td>{{task.title}}</td>
                                         <td class="project-actions text-right">
@@ -59,7 +59,7 @@
                                                     Edit
                                                 </span>
                                             </router-link>
-                                            <a @click="deleteTask(task.id)" class="btn btn-danger btn-sm" href="#">
+                                            <a @click="deleteTask(task.id, index)" class="btn btn-danger btn-sm" href="#">
                                                 <i class="fas fa-trash">
                                                 </i>
                                                 Delete
@@ -90,25 +90,35 @@
     export default {
         data() {
             return {
-                tasks: "",
+                tasks: [],
+                responseMessage: ""
             }
         },
         mounted () {
             axios
-                .get('/api/tasks')
+                .get('/api/tasks', {
+                    headers: {
+                        Authorization: 'Bearer ' + localStorage.getItem('token')
+                    }
+                })
                 .then(response => (this.tasks = response.data));
         },
         methods: {
             passTaskData(id){
                 EventBus.$emit('TASK_DATA', this.tasks[id]);
             },
-            deleteTask(id){
+            deleteTask(id, index){
                 if(confirm("Are you sure you want to delete task?")){
                     axios
-                        .delete('/api/tasks/' + id)
-                        .then(response => (this.tasks = response.data));
+                        .delete('/api/tasks/' + id, {
+                            headers: {
+                                Authorization: 'Bearer ' + localStorage.getItem('token')
+                            }
+                        })
+                        .then(response => (this.responseMessage = response.data));
 
-                    this.$router.go();
+                    // Remove the row from the table after deletion
+                    this.tasks.splice(index, 1);
                 }
             }
         }

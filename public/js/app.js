@@ -2152,6 +2152,10 @@ __webpack_require__.r(__webpack_exports__);
         axios.post('/api/tasks', {
           title: this.formdata.title,
           description: this.formdata.description
+        }, {
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token')
+          }
         }).then(function (response) {
           return _this.tasks = response.data;
         }); // redirect to list of all tasks
@@ -2175,7 +2179,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../app */ "./resources/js/app.js");
 //
 //
 //
@@ -2237,7 +2240,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2252,7 +2254,11 @@ __webpack_require__.r(__webpack_exports__);
     var _this = this;
 
     var taskId = this.$route.params.id;
-    axios.get('/api/tasks/' + taskId).then(function (response) {
+    axios.get('/api/tasks/' + taskId, {
+      headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('token')
+      }
+    }).then(function (response) {
       return _this.task = response.data;
     });
   },
@@ -2263,6 +2269,10 @@ __webpack_require__.r(__webpack_exports__);
       axios.put('/api/tasks/' + this.task.id, {
         title: this.task.title,
         description: this.task.description
+      }, {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token')
+        }
       }).then(function (response) {
         return _this2.responseMessage = response.data;
       }); // redirect to list of all tasks
@@ -2378,13 +2388,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      tasks: ""
+      tasks: [],
+      responseMessage: ""
     };
   },
   mounted: function mounted() {
     var _this = this;
 
-    axios.get('/api/tasks').then(function (response) {
+    axios.get('/api/tasks', {
+      headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('token')
+      }
+    }).then(function (response) {
       return _this.tasks = response.data;
     });
   },
@@ -2392,14 +2407,19 @@ __webpack_require__.r(__webpack_exports__);
     passTaskData: function passTaskData(id) {
       _app__WEBPACK_IMPORTED_MODULE_0__["EventBus"].$emit('TASK_DATA', this.tasks[id]);
     },
-    deleteTask: function deleteTask(id) {
+    deleteTask: function deleteTask(id, index) {
       var _this2 = this;
 
       if (confirm("Are you sure you want to delete task?")) {
-        axios["delete"]('/api/tasks/' + id).then(function (response) {
-          return _this2.tasks = response.data;
-        });
-        this.$router.go();
+        axios["delete"]('/api/tasks/' + id, {
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token')
+          }
+        }).then(function (response) {
+          return _this2.responseMessage = response.data;
+        }); // Remove the row from the table after deletion
+
+        this.tasks.splice(index, 1);
       }
     }
   }
@@ -2480,7 +2500,11 @@ __webpack_require__.r(__webpack_exports__);
     var _this = this;
 
     var taskId = this.$route.params.id;
-    axios.get('/api/tasks/' + taskId).then(function (response) {
+    axios.get('/api/tasks/' + taskId, {
+      headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('token')
+      }
+    }).then(function (response) {
       return _this.task = response.data;
     });
   }
@@ -40675,8 +40699,8 @@ var render = function() {
                   _vm._v(" "),
                   _c(
                     "tbody",
-                    _vm._l(_vm.tasks, function(task) {
-                      return _c("tr", [
+                    _vm._l(_vm.tasks, function(task, index) {
+                      return _c("tr", { key: index }, [
                         _c("td", [_vm._v(_vm._s(task.id))]),
                         _vm._v(" "),
                         _c("td", [_vm._v(_vm._s(task.title))]),
@@ -40744,7 +40768,7 @@ var render = function() {
                                 attrs: { href: "#" },
                                 on: {
                                   click: function($event) {
-                                    return _vm.deleteTask(task.id)
+                                    return _vm.deleteTask(task.id, index)
                                   }
                                 }
                               },
@@ -56178,7 +56202,6 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 var EventBus = new vue__WEBPACK_IMPORTED_MODULE_0___default.a();
-axios.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem('token');
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue

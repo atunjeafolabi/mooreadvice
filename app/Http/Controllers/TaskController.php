@@ -4,17 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
+    protected $userId;
+
+    public function __construct(Request $request)
+    {
+        $this->userId = $request->user('api')->id;
+    }
+
     /**
      * Get all available tasks
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
-        $tasks = Task::all();
+        $tasks = Task::where('user_id', $this->userId)->get();
         return response()->json($tasks);
     }
 
@@ -43,6 +51,7 @@ class TaskController extends Controller
         $task = Task::create([
             'title' => $newTask->title,
             'description' => $newTask->description,
+            'user_id' => $this->userId
         ]);
 
         if($task->wasRecentlyCreated){

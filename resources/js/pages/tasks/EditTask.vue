@@ -60,7 +60,6 @@
     </div>
 </template>
 <script>
-    import {EventBus} from '../../app';
     export default  {
         data(){
             return {
@@ -75,13 +74,21 @@
             const taskId = this.$route.params.id;
 
             axios
-                .get('/api/tasks/' + taskId)
+                .get('/api/tasks/' + taskId, {
+                    headers: {
+                        Authorization: 'Bearer ' + localStorage.getItem('token')
+                    }
+                })
                 .then(response => (this.task = response.data));
         },
         methods: {
             saveTask(){
                 axios
-                    .put('/api/tasks/' + this.task.id, {title: this.task.title, description: this.task.description})
+                    .put('/api/tasks/' + this.task.id, {title: this.task.title, description: this.task.description}, {
+                        headers: {
+                            Authorization: 'Bearer ' + localStorage.getItem('token')
+                        }
+                    })
                     .then(response => (this.responseMessage = response.data));
 
                 // redirect to list of all tasks

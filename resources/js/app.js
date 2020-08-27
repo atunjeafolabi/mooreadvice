@@ -12,8 +12,6 @@ require('./bootstrap');
 window.Vue = require('vue');
 export const EventBus = new Vue();
 
-axios.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem('token');
-
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
