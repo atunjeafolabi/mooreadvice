@@ -6,7 +6,7 @@
 - sqlite3
 - Heroku for deployment
 
-You can view the live application hosted at: https://young-bayou-30747.herokuapp.com/
+You can view the live application hosted at: https://mooreadvice.herokuapp.com/
 
 To run the App locally, perform the following:
 
