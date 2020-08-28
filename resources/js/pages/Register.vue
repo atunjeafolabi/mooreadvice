@@ -26,8 +26,14 @@
                         <div class="card">
                             <div class="card-header">Register</div>
                             <div class="card-body">
-                                <p class="alert alert-success" v-if="successMessage">{{successMessage}}</p>
-                                <form action="" method="">
+                                <p class="alert alert-success" v-if="successMessage">
+                                    {{successMessage}}
+                                    <router-link :to="{name: 'login'}">You can Login</router-link>
+                                </p>
+                                <ul v-if="errors" class="alert alert-danger">
+                                    <li v-for="error in errors">{{error}}</li>
+                                </ul>
+                                <form action="" method="" v-if="!successMessage">
                                     <div class="form-group row">
                                         <label for="name" class="col-md-4 col-form-label text-md-right">Name</label>
                                         <div class="col-md-6">
@@ -76,14 +82,21 @@
                     password: "",
                     password_confirmation: ""
                 },
-                successMessage: ""
+                successMessage: "",
+                errors: ""
             }
         },
         methods: {
             register(){
                 axios
                     .post('/api/register', this.user)
-                    .then(response => (this.successMessage = response.data));
+                    .then(response => {
+                        this.errors = "";   // Clear the errors
+                        this.successMessage = response.data.message;
+                    })
+                    .catch(error => {
+                        this.errors = error.response.data.errors;
+                    });
             }
         },
     }

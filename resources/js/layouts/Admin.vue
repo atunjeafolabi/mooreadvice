@@ -9,8 +9,10 @@
                 <li class="nav-item d-none d-sm-inline-block">
                     <router-link :to="{name: 'all-tasks'}" class="nav-link">Home</router-link>
                 </li>
-                <li class="nav-item d-none d-sm-inline-block">
-                    <a @click="logout()" class="nav-link">Logout</a>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a @click="logout()" class="btn">Logout</a>
                 </li>
             </ul>
         </nav>
@@ -32,7 +34,7 @@
                         <img src="https://www.computerhope.com/jargon/t/task.jpg" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <router-link :to="{name: 'all-tasks'}" class="d-block">TASKS</router-link>
+                        <a class="d-block">{{name}}</a>
                     </div>
                 </div>
 
@@ -64,20 +66,35 @@
 </template>
 <script>
     export default {
+        data(){
+            return {
+                name: ""
+            }
+        },
+        mounted() {
+            axios
+                .get('/api/user', {
+                        headers: {
+                        Authorization: 'Bearer ' + localStorage.getItem('token')
+                    }
+                 })
+                .then(response => {
+                    this.name = response.data.name;
+                });
+        },
         methods: {
             logout(){
-                localStorage.removeItem('token');
-                this.$router.push({name: 'login'});
-                // axios
-                //     .get('/api/logout')
-                //     .then(response => (
-                //         this.removeToken()
-                //     ));
-            },
-            // removeToken(){
-            //     localStorage.removeItem('token');
-            //     this.$router.push({name: 'login'});
-            // }
+                axios
+                    .get('/api/logout', {
+                        headers: {
+                            Authorization: 'Bearer ' + localStorage.getItem('token')
+                        }
+                    })
+                    .then(response => {
+                        localStorage.removeItem('token');
+                        this.$router.push({name: 'login'});
+                    });
+            }
         }
     }
 </script>

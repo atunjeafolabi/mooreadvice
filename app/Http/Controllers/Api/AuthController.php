@@ -27,7 +27,7 @@ class AuthController extends Controller
         $user = User::create($request->toArray());
 
         if($user) {
-            return response("User created successfully. You can now login.");
+            return response(['message' => "User created successfully."], 201);
         }
 
 //        $token = $user->createToken('Laravel Password Grant Client')->accessToken;
@@ -43,7 +43,7 @@ class AuthController extends Controller
 
             if (Hash::check($request->password, $user->password)) {
                 $token = $user->createToken('Laravel Password Grant Client')->accessToken;
-                $response = ['token' => $token];
+                $response = ['token' => $token, 'userName' => $user->name];
                 return response($response, 200);
             } else {
                 $response = "Incorrect Password";

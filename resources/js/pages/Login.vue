@@ -1,6 +1,5 @@
 <template>
     <div>
-
         <nav class="navbar navbar-expand-lg navbar-light navbar-laravel">
             <div class="container">
                 <a class="navbar-brand" href="#">Task</a>
@@ -26,6 +25,7 @@
                         <div class="card">
                             <div class="card-header">Login</div>
                             <div class="card-body">
+                                <p class="alert alert-danger" v-if="error">{{error}}</p>
                                 <form action="" method="">
                                     <div class="form-group row">
                                         <label for="email_address" class="col-md-4 col-form-label text-md-right">E-Mail Address</label>
@@ -76,22 +76,23 @@
                     email: "",
                     password: ""
                 },
-                token: ""
+                token: "",
+                error: ""
             }
         },
         methods: {
-            async login(){
-                await axios
+             login(){
+                 axios
                     .post('api/login', {email: this.user.email, password: this.user.password})
-                    .then(response => (
-                        this.storeToken(response.data.token)
-                    ));
-            },
-            storeToken(token){
-                // Store token in browser
-                localStorage.setItem('token', token);
-                // Redirect to list of all tasks page
-                this.$router.push({name: 'all-tasks'});
+                    .then(response => {
+                        // Store token in browser
+                        localStorage.setItem('token', response.data.token);
+                        // Redirect to list of all tasks page
+                        this.$router.push({name: 'all-tasks'});
+                    })
+                    .catch(error => {
+                        this.error = error.response.data;
+                    });
             }
         },
     }
